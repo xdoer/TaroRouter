@@ -1,0 +1,71 @@
+{
+  "version": "0.1.0",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "engines": {
+    "node": ">=10"
+  },
+  "scripts": {
+    "start": "tsdx watch",
+    "build": "tsdx build",
+    "test": "tsdx test",
+    "lint": "tsdx lint",
+    "prepare": "tsdx build",
+    "size": "size-limit",
+    "analyze": "size-limit --why"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "tsdx lint"
+    }
+  },
+  "homepage": "https://github.com/LuckyHH/generated-plugin-taroRouterService",
+  "bugs": {
+    "url": "https://github.com/LuckyHH/generated-plugin-taroRouterService/issues",
+    "email": "gotoanything@foxmail.com"
+  },
+  "keywords": [
+    "taro",
+    "router"
+  ],
+  "prettier": {
+    "printWidth": 80,
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
+  "name": "generated-plugin-taroRouterService",
+  "author": "Thomas Trainset",
+  "module": "dist/generated-plugin-taroRouterService.esm.js",
+  "size-limit": [
+    {
+      "path": "dist/generated-plugin-taroRouterService.cjs.production.min.js",
+      "limit": "10 KB"
+    },
+    {
+      "path": "dist/generated-plugin-taroRouterService.esm.js",
+      "limit": "10 KB"
+    }
+  ],
+  "peerDependencies": {
+    "generated": "^0.0.3"
+  },
+  "dependencies": {
+    "generated": "^0.0.3",
+    "ts-morph": "^9.1.0"
+  },
+  "devDependencies": {
+    "@size-limit/preset-small-lib": "^4.9.1",
+    "@types/lodash": "^4.14.166",
+    "husky": "^4.3.6",
+    "size-limit": "^4.9.1",
+    "tsdx": "^0.14.1",
+    "tslib": "^2.0.3",
+    "typescript": "^4.1.3"
+  }
+}
