@@ -1,4 +1,4 @@
-# generated-plugin-taroRouterService
+# generated-plugin-taro-router-service
 
 ## 缘由
 
@@ -46,7 +46,7 @@ navigateTo({ url: `${URLs.Test}?id=1` })
 ## 安装
 
 ```bash
-npm i generated generated-plugin-taroRouterService -D
+npm i generated generated-plugin-taro-router-service -D
 ```
 
 [generted](https://github.com/forsigner/generated)
@@ -65,7 +65,7 @@ import { GeneratedrcConfig } from 'generated'
 const generatedrc: GeneratedrcConfig = {
   configDir: './gconfig', // generated 插件配置目录
   plugins: [
-    'generated-plugin-taroRouterService'  // 注册插件
+    'generated-plugin-taro-router-service'  // 注册插件
   ],
 }
 
@@ -79,7 +79,7 @@ export default generatedrc
 2、写入配置
 
 ```ts
-import { Config } from 'generated-plugin-taroRouterService'
+import { Config } from 'generated-plugin-taro-router-service'
 
 const basePath = process.cwd()
 

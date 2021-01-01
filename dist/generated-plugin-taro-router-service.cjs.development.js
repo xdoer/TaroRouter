@@ -1,8 +1,12 @@
-import { sep, resolve, join, isAbsolute } from 'path';
-import { readdirSync, promises } from 'fs';
-import { last } from 'lodash-es';
-import { Project, VariableDeclarationKind, SyntaxKind } from 'ts-morph';
-import { SemicolonPreference } from 'typescript';
+'use strict';
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
+var path = require('path');
+var fs = require('fs');
+var lodash = require('lodash');
+var tsMorph = require('ts-morph');
+var typescript = require('typescript');
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
   try {
@@ -129,9 +133,9 @@ var initOpt = {
   type: 'main',
   "package": ''
 };
-function getRouterList(path, routerList, opt) {
-  if (path === void 0) {
-    path = '';
+function getRouterList(path$1, routerList, opt) {
+  if (path$1 === void 0) {
+    path$1 = '';
   }
 
   if (routerList === void 0) {
@@ -142,16 +146,16 @@ function getRouterList(path, routerList, opt) {
     opt = initOpt;
   }
 
-  var paths = readdirSync(path);
+  var paths = fs.readdirSync(path$1);
   var _opt = opt,
       prefix = _opt.prefix;
 
   for (var _iterator = _createForOfIteratorHelperLoose(paths), _step; !(_step = _iterator()).done;) {
     var item = _step.value;
-    var name = last(item.split(sep)) || '';
+    var name = lodash.last(item.split(path.sep)) || '';
 
     if (/^pages$/.test(name)) {
-      var pageDir = readdirSync(resolve(path, item));
+      var pageDir = fs.readdirSync(path.resolve(path$1, item));
 
       for (var _iterator2 = _createForOfIteratorHelperLoose(pageDir), _step2; !(_step2 = _iterator2()).done;) {
         var page = _step2.value;
@@ -170,7 +174,7 @@ function getRouterList(path, routerList, opt) {
         type: 'sub',
         "package": name
       };
-      routerList = getRouterList(resolve(path, item), routerList, _opt2);
+      routerList = getRouterList(path.resolve(path$1, item), routerList, _opt2);
     }
   }
 
@@ -933,7 +937,7 @@ try {
 
 var formatSettings = {
   indentSize: 2,
-  semicolons: SemicolonPreference.Remove
+  semicolons: typescript.SemicolonPreference.Remove
 };
 function saveSourceFile(_x) {
   return _saveSourceFile.apply(this, arguments);
@@ -962,12 +966,12 @@ function _saveSourceFile() {
 }
 
 function generateRouterService(routerList, generateRouterServiceOpt) {
-  var project = new Project();
+  var project = new tsMorph.Project();
   var generatedDir = generateRouterServiceOpt.generatedDir,
       navigateSpecifier = generateRouterServiceOpt.navigateSpecifier,
       navigateFnName = generateRouterServiceOpt.navigateFnName,
       outputFileName = generateRouterServiceOpt.outputFileName;
-  var outPath = join(generatedDir, outputFileName + ".ts");
+  var outPath = path.join(generatedDir, outputFileName + ".ts");
   var sourceFile = project.createSourceFile(outPath, undefined, {
     overwrite: true
   });
@@ -1005,7 +1009,7 @@ function generateRouterService(routerList, generateRouterServiceOpt) {
     methods: methods
   });
   sourceFile.addVariableStatement({
-    declarationKind: VariableDeclarationKind.Const,
+    declarationKind: tsMorph.VariableDeclarationKind.Const,
     declarations: [{
       name: 'routerService',
       initializer: "new RouterService()"
@@ -1074,13 +1078,13 @@ function _modifyAppConfig() {
               pages: [],
               subPackages: []
             });
-            project = new Project();
+            project = new tsMorph.Project();
             project.addSourceFileAtPath(appConfigPath);
             sourceFile = project.getSourceFileOrThrow(appConfigPath);
             expAssign = sourceFile.getExportAssignmentOrThrow(function () {
               return true;
             });
-            objectLiteralExpression = expAssign.getChildrenOfKind(SyntaxKind.ObjectLiteralExpression)[0];
+            objectLiteralExpression = expAssign.getChildrenOfKind(tsMorph.SyntaxKind.ObjectLiteralExpression)[0];
             pageInitializer = "[" + routes.pages.map(function (v) {
               return '"' + v + '"';
             }) + "]";
@@ -1172,7 +1176,7 @@ function _modifyProjectConfig() {
             }
 
             _context.next = 12;
-            return promises.writeFile(projectConfigPath, JSON.stringify(projectConfig, null, 2));
+            return fs.promises.writeFile(projectConfigPath, JSON.stringify(projectConfig, null, 2));
 
           case 12:
           case "end":
@@ -1193,7 +1197,7 @@ var index = (function (options) {
   var routerConfig = options.config.taroRouter || {};
   var _options = options,
       _options$generatedDir = _options.generatedDir,
-      generatedDir = _options$generatedDir === void 0 ? join(cwd, 'src', 'generated') : _options$generatedDir;
+      generatedDir = _options$generatedDir === void 0 ? path.join(cwd, 'src', 'generated') : _options$generatedDir;
 
   var _resolveConfig = resolveConfig(routerConfig),
       pageDir = _resolveConfig.pageDir,
@@ -1224,10 +1228,10 @@ function resolveConfig(routerConfig) {
       appConfigPath = routerConfig.appConfigPath,
       projectConfigPath = routerConfig.projectConfigPath;
   return [pageDir, appConfigPath, projectConfigPath].reduce(function (res, cur) {
-    res[cur] = isAbsolute(cur) ? cur : resolve(cwd, cur);
+    res[cur] = path.isAbsolute(cur) ? cur : path.resolve(cwd, cur);
     return res;
   }, routerConfig);
 }
 
-export default index;
-//# sourceMappingURL=generated-plugin-taroRouterService.esm.js.map
+exports.default = index;
+//# sourceMappingURL=generated-plugin-taro-router-service.cjs.development.js.map
