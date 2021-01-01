@@ -84,12 +84,27 @@ import { Config } from 'generated-plugin-taro-router-service'
 const basePath = process.cwd()
 
 export const taroRouter: Config = {
-  pageDir: basePath + '/src', // 源码目录
-  navigateSpecifier: '@business/app', // 方法导入标识符
+
+  // 源码目录
+  pageDir: basePath + '/src',
+  
+  // app.config 路径
+  appConfigPath: basePath + '/src/app.config.ts',
+
+  // project.config.json 路径
+  projectConfigPath: basePath + '/project.config.json',
+
+  // 输出文件名
+  outputFileName: 'routerService',
+
+  /**
+   * 导入组件
+   * 
+   * 输出的文件将导入方法
+   * import { customNavigateTo } from '@/business/app'
+  */
   navigateFnName: 'customNavigateTo', // 导入方法名
-  appConfigPath: basePath + '/src/app.config.ts', // app.config 路径
-  projectConfigPath: basePath + '/project.config.json',  // project.config.json 路径
-  outputFileName: 'routerService'  // 输出文件名
+  navigateSpecifier: '@/business/app', // 方法导入标识符
 }
 ```
 
@@ -126,3 +141,7 @@ export function customNavigateTo(pagePath: string, data?: any, opt?: any) {
   navigateTo({ url, ...opt })
 }
 ```
+
+## TODO
+
+- [ ] 监听页面文件夹创建，自动运行 generated 命令，生成相关配置文件
