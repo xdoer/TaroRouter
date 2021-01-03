@@ -23,15 +23,15 @@ navigateTo({ url: `${URLs.Test}?id=1` })
 
 因而这个小工具诞生了。
 
-## 环境
-
-`taro typescript`
-
 ## 作用
 
 >* 自动配置 `app.config.ts` 文件进行页面注册
 >* 自动配置 `project.config.json` 文件，添加开发者工具页面编译快捷入口
 >* 自动生成 `routerService` 文件，使得路由调用跳转更便捷。
+
+## 环境
+
+`taro typescript`
 
 ## 使用
 
@@ -42,6 +42,8 @@ navigateTo({ url: `${URLs.Test}?id=1` })
 ```tsx
 <View onClick={() => routerService.toTest({ id: 1 })}>跳转</View>
 ```
+
+注意: 配合[webpack-plugin-chokidar](https://github.com/LuckyHH/webpack-plugin-chokidar)插件，新建页面后即可实时生成各项配置文件
 
 ## 安装
 
@@ -131,7 +133,7 @@ npm run gen
 
 ## 路由方法
 
-工具内部没有直接使用taro 原生的 `navigateTo` 方法，而是需要手动配置方法。这是因为一来 taro 导出的路由 API 并不好用，二来自定义程度不够高。您可以在保证函数传参条件的情况下，随意进行函数实现
+工具内部没有直接使用taro 原生的 `navigateTo` 方法，而是需要手动配置方法。一是因为 taro 导出的路由 API 并不好用，二是 API 封装在内部，自定义程度不够高。您可以在保证函数传参条件的情况下，随意进行函数实现
 
 ```tsx
 import { navigateTo } from '@tarojs/taro'
@@ -142,6 +144,10 @@ export function customNavigateTo(pagePath: string, data?: any, opt?: any) {
 }
 ```
 
-## TODO
+## 监听文件变更自动运行命令
 
-- [ ] 监听页面文件夹创建，自动运行 generated 命令，生成相关配置文件
+新建文件后，手动运行 `generated` 命令还是不够方便，因而，我设计了一个集成 [chokidar](https://github.com/paulmillr/chokidar) 的 webpack 插件[webpack-plugin-chokidar](https://github.com/LuckyHH/webpack-plugin-chokidar)，通过该插件，可以很容易的对文件更改进行监听，然后利用 shelljs 执行脚本即可。
+
+## 案例
+
+本文案例查阅 [example](/example) 代码
