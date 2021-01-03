@@ -1,4 +1,5 @@
 const path = require("path")
+const chokidarPluginConfig = require('./watchFile');
 
 const config = {
   projectName: 'example',
@@ -40,6 +41,16 @@ const config = {
           generateScopedName: '[name]__[local]___[hash:base64:5]',
         },
       },
+    },
+    webpackChain(chain) {
+      chain.merge({
+        plugin: {
+          install: {
+            plugin: require('webpack-plugin-chokidar'),
+            args: [chokidarPluginConfig],
+          },
+        },
+      });
     },
   },
   h5: {

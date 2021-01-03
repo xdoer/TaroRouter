@@ -59,7 +59,9 @@
     "eslint-plugin-react": "^7.8.2",
     "eslint-plugin-react-hooks": "^1.6.1",
     "generated-plugin-taro-router-service": "^0.1.0",
+    "shelljs": "^0.8.4",
     "stylelint": "9.3.0",
-    "typescript": "^3.7.0"
+    "typescript": "^3.7.0",
+    "webpack-plugin-chokidar": "^0.1.0"
   }
 }
