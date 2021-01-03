@@ -1,9 +1,21 @@
+const chokidarPluginConfig = require('./watchFile');
+
 module.exports = {
   env: {
-    NODE_ENV: '"development"'
+    NODE_ENV: '"development"',
   },
-  defineConstants: {
+  defineConstants: {},
+  mini: {
+    webpackChain(chain) {
+      chain.merge({
+        plugin: {
+          install: {
+            plugin: require('webpack-plugin-chokidar'),
+            args: [chokidarPluginConfig],
+          },
+        },
+      });
+    },
   },
-  mini: {},
-  h5: {}
-}
+  h5: {},
+};
