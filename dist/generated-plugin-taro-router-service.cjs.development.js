@@ -2,9 +2,12 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
+function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
+
 var path = require('path');
 var fs = require('fs');
-var lodash = require('lodash');
+var last = _interopDefault(require('lodash/last'));
+var upperFirst = _interopDefault(require('lodash/upperFirst'));
 var tsMorph = require('ts-morph');
 var typescript = require('typescript');
 
@@ -104,14 +107,6 @@ function _createForOfIteratorHelperLoose(o, allowArrayLike) {
   return it.next.bind(it);
 }
 
-function upFirst(s) {
-  if (s === void 0) {
-    s = '';
-  }
-
-  return s.charAt(0).toUpperCase() + s.slice(1);
-}
-
 //   {
 //     name: 'Index',
 //     prefix: '',
@@ -152,7 +147,7 @@ function getRouterList(path$1, routerList, opt) {
 
   for (var _iterator = _createForOfIteratorHelperLoose(paths), _step; !(_step = _iterator()).done;) {
     var item = _step.value;
-    var name = lodash.last(item.split(path.sep)) || '';
+    var name = last(item.split(path.sep)) || '';
 
     if (/^pages$/.test(name)) {
       var pageDir = fs.readdirSync(path.resolve(path$1, item));
@@ -160,11 +155,14 @@ function getRouterList(path$1, routerList, opt) {
       for (var _iterator2 = _createForOfIteratorHelperLoose(pageDir), _step2; !(_step2 = _iterator2()).done;) {
         var page = _step2.value;
         var pagePath = "/" + (prefix ? prefix + '/' : '') + page + "/index";
-        var formatPageName = upFirst(page);
-        routerList.push(_extends({
-          name: formatPageName,
-          path: pagePath
-        }, opt));
+
+        if (fs.existsSync(pagePath)) {
+          var formatPageName = upperFirst(page);
+          routerList.push(_extends({
+            name: formatPageName,
+            path: pagePath
+          }, opt));
+        }
       }
     }
 
@@ -970,7 +968,11 @@ function generateRouterService(routerList, generateRouterServiceOpt) {
   var generatedDir = generateRouterServiceOpt.generatedDir,
       navigateSpecifier = generateRouterServiceOpt.navigateSpecifier,
       navigateFnName = generateRouterServiceOpt.navigateFnName,
-      outputFileName = generateRouterServiceOpt.outputFileName;
+      outputFileName = generateRouterServiceOpt.outputFileName,
+      _generateRouterServic = generateRouterServiceOpt.formatter,
+      formatter = _generateRouterServic === void 0 ? function (name) {
+    return name;
+  } : _generateRouterServic;
   var outPath = path.join(generatedDir, outputFileName + ".ts");
   var sourceFile = project.createSourceFile(outPath, undefined, {
     overwrite: true
@@ -987,11 +989,11 @@ function generateRouterService(routerList, generateRouterServiceOpt) {
     var name = routerMeta.name,
         initializer = routerMeta.path;
     properties.push({
-      name: name,
+      name: formatter(name),
       initializer: "\"" + initializer + "\""
     });
     methods.push({
-      name: "to" + name + "<T>",
+      name: "to" + formatter(name) + "<T>",
       parameters: [{
         name: 'data?',
         type: 'T'
@@ -1124,7 +1126,7 @@ function _modifyProjectConfig() {
   _modifyProjectConfig = _asyncToGenerator( /*#__PURE__*/runtime_1.mark(function _callee(routerList, modifyProjectConfig) {
     var _projectConfig$condit, _projectConfig$condit2, _projectConfig$condit3;
 
-    var projectConfigPath, projectConfig, originList, modify, _loop, i;
+    var projectConfigPath, projectConfig, originList, _loop, i;
 
     return runtime_1.wrap(function _callee$(_context) {
       while (1) {
@@ -1146,7 +1148,6 @@ function _modifyProjectConfig() {
             }
 
             originList = projectConfig.condition.miniprogram.list;
-            modify = false;
 
             _loop = function _loop(i) {
               var _routerList$i = routerList[i],
@@ -1162,7 +1163,10 @@ function _modifyProjectConfig() {
                   name: name,
                   pathName: path.slice(1)
                 });
-                modify = true;
+              } else {
+                originList[pos] = _extends({}, originList[pos], {
+                  id: i
+                });
               }
             };
 
@@ -1170,15 +1174,10 @@ function _modifyProjectConfig() {
               _loop(i);
             }
 
-            if (!modify) {
-              _context.next = 12;
-              break;
-            }
-
-            _context.next = 12;
+            _context.next = 10;
             return fs.promises.writeFile(projectConfigPath, JSON.stringify(projectConfig, null, 2));
 
-          case 12:
+          case 10:
           case "end":
             return _context.stop();
         }
@@ -1206,14 +1205,16 @@ var index = (function (options) {
       appConfigPath = _resolveConfig.appConfigPath,
       projectConfigPath = _resolveConfig.projectConfigPath,
       navigateFnName = _resolveConfig.navigateFnName,
-      outputFileName = _resolveConfig.outputFileName;
+      outputFileName = _resolveConfig.outputFileName,
+      formatter = _resolveConfig.formatter;
 
   var routerList = getRouterList(pageDir);
   generateRouterService(routerList, {
     generatedDir: generatedDir,
     navigateSpecifier: navigateSpecifier,
     navigateFnName: navigateFnName,
-    outputFileName: outputFileName
+    outputFileName: outputFileName,
+    formatter: formatter
   });
   modifyAppConfig(routerList, {
     appConfigPath: appConfigPath
