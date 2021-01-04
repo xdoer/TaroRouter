@@ -1,5 +1,5 @@
 {
-  "version": "0.1.1",
+  "version": "0.1.2",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -57,11 +57,12 @@
   },
   "dependencies": {
     "generated": "^0.0.3",
+    "lodash.last": "^3.0.0",
     "ts-morph": "^9.1.0"
   },
   "devDependencies": {
     "@size-limit/preset-small-lib": "^4.9.1",
-    "@types/lodash": "^4.14.166",
+    "@types/lodash.last": "^3.0.6",
     "husky": "^4.3.6",
     "size-limit": "^4.9.1",
     "tsdx": "^0.14.1",

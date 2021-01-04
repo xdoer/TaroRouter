@@ -4,8 +4,9 @@ export interface Config {
     navigateSpecifier: string;
     appConfigPath: string;
     projectConfigPath: string;
-    outputFileName: string;
-    formatter(name: string): any;
+    outputFileName?: string;
+    exts?: string[];
+    formatter?(name: string): any;
 }
 export interface RouterMetaOpt {
     prefix: string;
@@ -20,8 +21,8 @@ export interface GenerateRouterServiceOpt {
     generatedDir: string;
     navigateSpecifier: string;
     navigateFnName: string;
-    outputFileName: string;
-    formatter(name: string): any;
+    outputFileName?: string;
+    formatter?(name: string): any;
 }
 export interface ModifyAppConfigOpt {
     appConfigPath: string;

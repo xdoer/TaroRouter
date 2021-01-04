@@ -1,8 +1,8 @@
 import { readdirSync, existsSync } from 'fs'
-import last from "lodash/last"
-import upperFirst from "lodash/upperFirst"
+import last from 'lodash.last'
 import { sep, resolve } from 'path'
 import { RouterMeta, RouterMetaOpt } from './types'
+import { upFirst } from './utils'
 
 // const routerList = [
 //   {
@@ -23,7 +23,7 @@ import { RouterMeta, RouterMetaOpt } from './types'
 
 const initOpt: RouterMetaOpt = { prefix: 'pages', type: 'main', package: '' }
 
-export function getRouterList(path = '', routerList: RouterMeta[] = [], opt = initOpt) {
+export function getRouterList(path = '', exts = ['tsx'] ,routerList: RouterMeta[] = [], opt = initOpt) {
   const paths = readdirSync(path)
   const { prefix } = opt
 
@@ -32,25 +32,33 @@ export function getRouterList(path = '', routerList: RouterMeta[] = [], opt = in
 
     if (/^pages$/.test(name)) {
       const pageDir = readdirSync(resolve(path, item))
+
       for (const page of pageDir) {
         const pagePath = `/${prefix ? prefix + '/' : ''}${page}/index`
-        if (existsSync(pagePath)) {
-          const formatPageName = upperFirst(page)
+        const realFilePath = `${path}/pages/${page}/index`
 
-          routerList.push({
-            name: formatPageName,
-            path: pagePath,
-            ...opt
-          })
-        }
+        getPathList(realFilePath, exts).forEach(p => {
+          if (existsSync(p)) {
+            const formatPageName = upFirst(page)
+            routerList.push({
+              name: formatPageName,
+              path: pagePath,
+              ...opt
+            })
+          }          
+        })
       }
     }
 
     if (/^package-/.test(name)) {
       const opt: RouterMetaOpt = { prefix: `${name}/pages`, type: 'sub', package: name }
-      routerList = getRouterList(resolve(path, item), routerList, opt)
+      routerList = getRouterList(resolve(path, item), exts, routerList, opt)
     }
   }
 
   return routerList
 }
+
+
+const getPathList = (path: string, exts: string[]) => exts.map(v => path + `.${v}`)
+

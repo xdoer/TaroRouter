@@ -1,7 +1,6 @@
 import { sep, resolve, join, isAbsolute } from 'path';
 import { readdirSync, existsSync, promises } from 'fs';
-import last from 'lodash-es/last';
-import upperFirst from 'lodash-es/upperFirst';
+import last from 'lodash.last';
 import { Project, VariableDeclarationKind, SyntaxKind } from 'ts-morph';
 import { SemicolonPreference } from 'typescript';
 
@@ -101,6 +100,14 @@ function _createForOfIteratorHelperLoose(o, allowArrayLike) {
   return it.next.bind(it);
 }
 
+function upFirst(s) {
+  if (s === void 0) {
+    s = '';
+  }
+
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
 //   {
 //     name: 'Index',
 //     prefix: '',
@@ -122,9 +129,13 @@ var initOpt = {
   type: 'main',
   "package": ''
 };
-function getRouterList(path, routerList, opt) {
+function getRouterList(path, exts, routerList, opt) {
   if (path === void 0) {
     path = '';
+  }
+
+  if (exts === void 0) {
+    exts = ['tsx'];
   }
 
   if (routerList === void 0) {
@@ -146,17 +157,23 @@ function getRouterList(path, routerList, opt) {
     if (/^pages$/.test(name)) {
       var pageDir = readdirSync(resolve(path, item));
 
-      for (var _iterator2 = _createForOfIteratorHelperLoose(pageDir), _step2; !(_step2 = _iterator2()).done;) {
+      var _loop = function _loop() {
         var page = _step2.value;
         var pagePath = "/" + (prefix ? prefix + '/' : '') + page + "/index";
+        var realFilePath = path + "/pages/" + page + "/index";
+        getPathList(realFilePath, exts).forEach(function (p) {
+          if (existsSync(p)) {
+            var formatPageName = upFirst(page);
+            routerList.push(_extends({
+              name: formatPageName,
+              path: pagePath
+            }, opt));
+          }
+        });
+      };
 
-        if (existsSync(pagePath)) {
-          var formatPageName = upperFirst(page);
-          routerList.push(_extends({
-            name: formatPageName,
-            path: pagePath
-          }, opt));
-        }
+      for (var _iterator2 = _createForOfIteratorHelperLoose(pageDir), _step2; !(_step2 = _iterator2()).done;) {
+        _loop();
       }
     }
 
@@ -166,12 +183,18 @@ function getRouterList(path, routerList, opt) {
         type: 'sub',
         "package": name
       };
-      routerList = getRouterList(resolve(path, item), routerList, _opt2);
+      routerList = getRouterList(resolve(path, item), exts, routerList, _opt2);
     }
   }
 
   return routerList;
 }
+
+var getPathList = function getPathList(path, exts) {
+  return exts.map(function (v) {
+    return path + ("." + v);
+  });
+};
 
 function createCommonjsModule(fn, module) {
 	return module = { exports: {} }, fn(module, module.exports), module.exports;
@@ -1112,6 +1135,7 @@ function checkAndAddProperty(name, node, initializer) {
   });
 }
 
+var id = 1;
 function modifyProjectConfig(_x, _x2) {
   return _modifyProjectConfig.apply(this, arguments);
 }
@@ -1147,21 +1171,15 @@ function _modifyProjectConfig() {
               var _routerList$i = routerList[i],
                   name = _routerList$i.name,
                   path = _routerList$i.path;
-              var pos = originList.findIndex(function (item) {
+              var idx = originList.findIndex(function (item) {
                 return item.name === name;
               });
-
-              if (pos === -1) {
-                originList.push({
-                  id: i,
-                  name: name,
-                  pathName: path.slice(1)
-                });
-              } else {
-                originList[pos] = _extends({}, originList[pos], {
-                  id: i
-                });
-              }
+              var pos = idx === -1 ? originList.length : idx;
+              originList[pos] = _extends({}, originList[pos], {
+                id: id++,
+                name: name,
+                pathName: path.slice(1)
+              });
             };
 
             for (i = 0; i < routerList.length; i++) {
@@ -1200,9 +1218,10 @@ var index = (function (options) {
       projectConfigPath = _resolveConfig.projectConfigPath,
       navigateFnName = _resolveConfig.navigateFnName,
       outputFileName = _resolveConfig.outputFileName,
-      formatter = _resolveConfig.formatter;
+      formatter = _resolveConfig.formatter,
+      exts = _resolveConfig.exts;
 
-  var routerList = getRouterList(pageDir);
+  var routerList = getRouterList(pageDir, exts);
   generateRouterService(routerList, {
     generatedDir: generatedDir,
     navigateSpecifier: navigateSpecifier,

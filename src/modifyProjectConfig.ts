@@ -1,6 +1,8 @@
 import { RouterMeta, modifyProjectConfigOpt } from "./types";
 import { promises as fs } from 'fs'
 
+let id = 1
+
 export async function modifyProjectConfig(routerList: RouterMeta[], modifyProjectConfig: modifyProjectConfigOpt) {
   const { projectConfigPath } = modifyProjectConfig
   const projectConfig = require(projectConfigPath)
@@ -21,21 +23,14 @@ export async function modifyProjectConfig(routerList: RouterMeta[], modifyProjec
 
   for (let i = 0; i < routerList.length; i++) {
     const { name, path } = routerList[i]
-    const pos = originList.findIndex((item: any) => item.name === name)
+    const idx = originList.findIndex((item: any) => item.name === name)
 
-    if (pos === -1) {
-      originList.push(
-        {
-          id: i,
-          name,
-          pathName: path.slice(1)
-        }
-      )
-    } else {
-      originList[pos] = {
-        ...originList[pos],
-        id: i
-      }
+    const pos = idx === -1 ? originList.length : idx
+    originList[pos] = {
+      ...originList[pos],
+      id: id++,
+      name,
+      pathName: path.slice(1)
     }
   }
 
