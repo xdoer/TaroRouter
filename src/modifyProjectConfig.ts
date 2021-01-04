@@ -19,7 +19,6 @@ export async function modifyProjectConfig(routerList: RouterMeta[], modifyProjec
 
   const originList = projectConfig.condition.miniprogram.list
 
-  let modify = false
   for (let i = 0; i < routerList.length; i++) {
     const { name, path } = routerList[i]
     const pos = originList.findIndex((item: any) => item.name === name)
@@ -32,11 +31,13 @@ export async function modifyProjectConfig(routerList: RouterMeta[], modifyProjec
           pathName: path.slice(1)
         }
       )
-      modify = true
+    } else {
+      originList[pos] = {
+        ...originList[pos],
+        id: i
+      }
     }
   }
 
-  if(modify) {
-    await fs.writeFile(projectConfigPath, JSON.stringify(projectConfig, null, 2))
-  }
+  await fs.writeFile(projectConfigPath, JSON.stringify(projectConfig, null, 2))
 }

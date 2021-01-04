@@ -11,7 +11,7 @@ import { RouterMeta, GenerateRouterServiceOpt } from './types'
 
 export function generateRouterService(routerList: RouterMeta[], generateRouterServiceOpt: GenerateRouterServiceOpt) {
   const project = new Project()
-  const { generatedDir, navigateSpecifier, navigateFnName, outputFileName } = generateRouterServiceOpt
+  const { generatedDir, navigateSpecifier, navigateFnName, outputFileName, formatter = name => name } = generateRouterServiceOpt
   const outPath = join(generatedDir, `${outputFileName}.ts`)
   const sourceFile = project.createSourceFile(outPath, undefined, { overwrite: true })
   const properties: OptionalKind<PropertyDeclarationStructure>[] = []
@@ -24,9 +24,10 @@ export function generateRouterService(routerList: RouterMeta[], generateRouterSe
 
   for (const routerMeta of routerList) {
     const { name, path: initializer } = routerMeta
-    properties.push({ name, initializer: `"${initializer}"` })
+
+    properties.push({ name: formatter(name), initializer: `"${initializer}"` })
     methods.push({
-      name: `to${name}<T>`,
+      name: `to${formatter(name)}<T>`,
       parameters: [{ name: 'data?', type: 'T' }, { name: 'opt?', type: 'any'}],
       statements: `${navigateFnName}("${initializer}", data as any, opt as any)`
     })

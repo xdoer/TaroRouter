@@ -1,8 +1,8 @@
-import { readdirSync } from 'fs'
-import { last } from 'lodash'
+import { readdirSync, existsSync } from 'fs'
+import last from "lodash/last"
+import upperFirst from "lodash/upperFirst"
 import { sep, resolve } from 'path'
 import { RouterMeta, RouterMetaOpt } from './types'
-import { upFirst } from './utils'
 
 // const routerList = [
 //   {
@@ -34,13 +34,15 @@ export function getRouterList(path = '', routerList: RouterMeta[] = [], opt = in
       const pageDir = readdirSync(resolve(path, item))
       for (const page of pageDir) {
         const pagePath = `/${prefix ? prefix + '/' : ''}${page}/index`
-        const formatPageName = upFirst(page)
+        if (existsSync(pagePath)) {
+          const formatPageName = upperFirst(page)
 
-        routerList.push({
-          name: formatPageName,
-          path: pagePath,
-          ...opt
-        })
+          routerList.push({
+            name: formatPageName,
+            path: pagePath,
+            ...opt
+          })
+        }
       }
     }
 
