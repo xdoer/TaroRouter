@@ -1,5 +1,4 @@
 import { Config } from 'generated-plugin-taro-router-service'
-import { upperFirst } from 'lodash'
 
 const basePath = process.cwd()
 
@@ -13,8 +12,11 @@ export const taroRouter: Config = {
   navigateFnName: 'navigateTo',  
   navigateSpecifier: '@common/utils',
 
-  formatter: (name: string) => {
-    const [f = '', s = ''] = name.split('-') || []
-    return upperFirst(f) + upperFirst(s)
+  formatter(name) {
+    return (name.split('-') || []).reduce((t, c) => t + upFirst(c), '')
   }
+}
+
+function upFirst(s: string = '') {
+  return s.charAt(0).toUpperCase() + s.slice(1)
 }
