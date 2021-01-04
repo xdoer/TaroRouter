@@ -9,11 +9,22 @@ import { join } from 'path'
 import { saveSourceFile } from './saveSourceFile'
 import { RouterMeta, GenerateRouterServiceOpt } from './types'
 
-export function generateRouterService(routerList: RouterMeta[], generateRouterServiceOpt: GenerateRouterServiceOpt) {
+export function generateRouterService(
+  routerList: RouterMeta[],
+  generateRouterServiceOpt: GenerateRouterServiceOpt
+) {
   const project = new Project()
-  const { generatedDir, navigateSpecifier, navigateFnName, outputFileName, formatter = name => name } = generateRouterServiceOpt
+  const {
+    generatedDir,
+    navigateSpecifier,
+    navigateFnName,
+    outputFileName,
+    formatter = (name) => name,
+  } = generateRouterServiceOpt
   const outPath = join(generatedDir, `${outputFileName}.ts`)
-  const sourceFile = project.createSourceFile(outPath, undefined, { overwrite: true })
+  const sourceFile = project.createSourceFile(outPath, undefined, {
+    overwrite: true,
+  })
   const properties: OptionalKind<PropertyDeclarationStructure>[] = []
   const methods: OptionalKind<MethodDeclarationStructure>[] = []
 
@@ -28,8 +39,11 @@ export function generateRouterService(routerList: RouterMeta[], generateRouterSe
     properties.push({ name: formatter(name), initializer: `"${initializer}"` })
     methods.push({
       name: `to${formatter(name)}<T>`,
-      parameters: [{ name: 'data?', type: 'T' }, { name: 'opt?', type: 'any'}],
-      statements: `${navigateFnName}("${initializer}", data as any, opt as any)`
+      parameters: [
+        { name: 'data?', type: 'T' },
+        { name: 'opt?', type: 'any' },
+      ],
+      statements: `${navigateFnName}("${initializer}", data as any, opt as any)`,
     })
   }
 

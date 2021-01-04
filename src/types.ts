@@ -12,9 +12,10 @@ export interface Config {
 export interface RouterMetaOpt {
   prefix: string
   type: 'main' | 'sub'
-  package: string  
+  package: string
 }
-export interface RouterMeta extends RouterMetaOpt{
+
+export interface RouterMeta extends RouterMetaOpt {
   name: string
   path: string
 }

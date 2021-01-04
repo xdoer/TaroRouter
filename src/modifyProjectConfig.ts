@@ -1,9 +1,12 @@
-import { RouterMeta, modifyProjectConfigOpt } from "./types";
+import { RouterMeta, modifyProjectConfigOpt } from './types'
 import { promises as fs } from 'fs'
 
 let id = 1
 
-export async function modifyProjectConfig(routerList: RouterMeta[], modifyProjectConfig: modifyProjectConfigOpt) {
+export async function modifyProjectConfig(
+  routerList: RouterMeta[],
+  modifyProjectConfig: modifyProjectConfigOpt
+) {
   const { projectConfigPath } = modifyProjectConfig
   const projectConfig = require(projectConfigPath)
 
@@ -30,7 +33,7 @@ export async function modifyProjectConfig(routerList: RouterMeta[], modifyProjec
       ...originList[pos],
       id: id++,
       name,
-      pathName: path.slice(1)
+      pathName: path.slice(1),
     }
   }
 

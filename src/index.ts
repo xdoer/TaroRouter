@@ -10,12 +10,27 @@ const cwd = process.cwd()
 
 export default (options = {} as PluginOptions) => {
   const routerConfig: Config = options.config.taroRouter || {}
-  
+
   const { generatedDir = join(cwd, 'src', 'generated') } = options
-  const { pageDir, navigateSpecifier = '', appConfigPath, projectConfigPath, navigateFnName, outputFileName, formatter, exts } = resolveConfig(routerConfig)
+  const {
+    pageDir,
+    navigateSpecifier = '',
+    appConfigPath,
+    projectConfigPath,
+    navigateFnName,
+    outputFileName,
+    formatter,
+    exts,
+  } = resolveConfig(routerConfig)
 
   const routerList = getRouterList(pageDir, exts)
-  generateRouterService(routerList, { generatedDir, navigateSpecifier, navigateFnName, outputFileName, formatter })
+  generateRouterService(routerList, {
+    generatedDir,
+    navigateSpecifier,
+    navigateFnName,
+    outputFileName,
+    formatter,
+  })
   modifyAppConfig(routerList, { appConfigPath })
   modifyProjectConfig(routerList, { projectConfigPath })
 }

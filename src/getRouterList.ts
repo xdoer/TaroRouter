@@ -23,7 +23,12 @@ import { upFirst } from './utils'
 
 const initOpt: RouterMetaOpt = { prefix: 'pages', type: 'main', package: '' }
 
-export function getRouterList(path = '', exts = ['tsx'] ,routerList: RouterMeta[] = [], opt = initOpt) {
+export function getRouterList(
+  path = '',
+  exts = ['tsx'],
+  routerList: RouterMeta[] = [],
+  opt = initOpt
+) {
   const paths = readdirSync(path)
   const { prefix } = opt
 
@@ -37,28 +42,31 @@ export function getRouterList(path = '', exts = ['tsx'] ,routerList: RouterMeta[
         const pagePath = `/${prefix ? prefix + '/' : ''}${page}/index`
         const realFilePath = `${path}/pages/${page}/index`
 
-        getPathList(realFilePath, exts).forEach(p => {
+        getPathList(realFilePath, exts).forEach((p) => {
           if (existsSync(p)) {
             const formatPageName = upFirst(page)
             routerList.push({
               name: formatPageName,
               path: pagePath,
-              ...opt
+              ...opt,
             })
-          }          
+          }
         })
       }
     }
 
     if (/^package-/.test(name)) {
-      const opt: RouterMetaOpt = { prefix: `${name}/pages`, type: 'sub', package: name }
+      const opt: RouterMetaOpt = {
+        prefix: `${name}/pages`,
+        type: 'sub',
+        package: name,
+      }
       routerList = getRouterList(resolve(path, item), exts, routerList, opt)
     }
   }
 
-  return routerList
+  // index page is first
+  return routerList.sort((a) => (a.name === 'Index' ? -1 : 1))
 }
 
-
-const getPathList = (path: string, exts: string[]) => exts.map(v => path + `.${v}`)
-
+const getPathList = (path: string, exts: string[]) => exts.map((v) => path + `.${v}`)
