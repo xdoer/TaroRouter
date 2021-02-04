@@ -6,7 +6,6 @@ export interface Config {
   projectConfigPath: string
   outputFileName?: string
   exts?: string[]
-  formatter?(name: string): any
 }
 
 export interface RouterMetaOpt {

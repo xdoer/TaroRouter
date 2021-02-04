@@ -1,6 +1,7 @@
 import { Project, SyntaxKind } from 'ts-morph'
 import { RouterMeta, ModifyAppConfigOpt } from './types'
 import { saveSourceFile } from './saveSourceFile'
+import { formatter } from './utils'
 
 export async function modifyAppConfig(
   routerList: RouterMeta[],
@@ -24,16 +25,16 @@ export async function modifyAppConfig(
       const subPackage = subPackages.find(
         (subPackage = {} as any) => subPackage?.root === meta.package
       )
-      const subPagePath = pagePath.replace(/^package-\b\w+\b\//, '')
+      const subPagePath = pagePath.replace(/^package(-\b\w+\b)+\//, '')
       if (subPackage) {
         subPackage.pages.push(subPagePath)
         return { ...routerConfig, subPackages }
       }
 
-      const [, packageName] = meta.package.match(/^package-(\w+)$/) || []
+      const [, packageName] = meta.package.match(/^package((-\b\w+\b)+)/) || []
       subPackages.push({
         root: meta.package,
-        name: packageName,
+        name: formatter(packageName),
         pages: [subPagePath],
       })
 

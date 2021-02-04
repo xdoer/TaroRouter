@@ -11,12 +11,4 @@ export const taroRouter: Config = {
   outputFileName: 'routerService',
   navigateFnName: 'navigateTo',  
   navigateSpecifier: '@common/utils',
-
-  formatter(name) {
-    return (name.split('-') || []).reduce((t, c) => t + upFirst(c), '')
-  }
-}
-
-function upFirst(s: string = '') {
-  return s.charAt(0).toUpperCase() + s.slice(1)
 }

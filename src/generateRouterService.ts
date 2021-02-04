@@ -8,6 +8,7 @@ import {
 import { join } from 'path'
 import { saveSourceFile } from './saveSourceFile'
 import { RouterMeta, GenerateRouterServiceOpt } from './types'
+import { formatter } from './utils'
 
 export function generateRouterService(
   routerList: RouterMeta[],
@@ -19,7 +20,6 @@ export function generateRouterService(
     navigateSpecifier,
     navigateFnName,
     outputFileName,
-    formatter = (name) => name,
   } = generateRouterServiceOpt
   const outPath = join(generatedDir, `${outputFileName}.ts`)
   const sourceFile = project.createSourceFile(outPath, undefined, {
