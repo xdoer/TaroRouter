@@ -55,10 +55,10 @@
     }
   ],
   "peerDependencies": {
-    "generated": "^0.0.4"
+    "generated": "^1.4.0"
   },
   "dependencies": {
-    "generated": "^0.0.4",
+    "generated": "^1.4.0",
     "lodash.last": "^3.0.0",
     "ts-morph": "^9.1.0"
   },
