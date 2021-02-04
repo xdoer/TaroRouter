@@ -8,7 +8,7 @@ import {
 import { join } from 'path'
 import { saveSourceFile } from './saveSourceFile'
 import { RouterMeta, GenerateRouterServiceOpt } from './types'
-import { formatter } from './utils'
+import { upFirst } from './utils'
 
 export function generateRouterService(
   routerList: RouterMeta[],
@@ -36,9 +36,9 @@ export function generateRouterService(
   for (const routerMeta of routerList) {
     const { name, path: initializer } = routerMeta
 
-    properties.push({ name: formatter(name), initializer: `"${initializer}"` })
+    properties.push({ name: upFirst(name), initializer: `"${initializer}"` })
     methods.push({
-      name: `to${formatter(name)}<T>`,
+      name: `to${upFirst(name)}<T>`,
       parameters: [
         { name: 'data?', type: 'T' },
         { name: 'opt?', type: 'any' },
