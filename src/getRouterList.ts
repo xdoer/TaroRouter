@@ -2,7 +2,7 @@ import { readdirSync, existsSync } from 'fs'
 import last from 'lodash.last'
 import { sep, resolve } from 'path'
 import { RouterMeta, RouterMetaOpt } from './types'
-import { upFirst } from './utils'
+import { formatter } from './utils'
 
 // const routerList = [
 //   {
@@ -44,7 +44,7 @@ export function getRouterList(
 
         getPathList(realFilePath, exts).forEach((p) => {
           if (existsSync(p)) {
-            const formatPageName = upFirst(page)
+            const formatPageName = formatter(page)
             routerList.push({
               name: formatPageName,
               path: pagePath,
@@ -66,7 +66,7 @@ export function getRouterList(
   }
 
   // index page is first
-  return routerList.sort((a) => (a.name === 'Index' ? -1 : 1))
+  return routerList.sort((a) => (a.name === 'index' ? -1 : 1))
 }
 
 const getPathList = (path: string, exts: string[]) => exts.map((v) => path + `.${v}`)
