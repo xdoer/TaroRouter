@@ -1,4 +1,5 @@
 *.log
 .DS_Store
+example.gif
 node_modules
 dist
