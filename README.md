@@ -33,6 +33,10 @@ navigateTo({ url: `${URLs.Test}?id=1` })
 
 `taro typescript`
 
+## 效果
+
+![效果图](./example.gif)
+
 ## 使用
 
 1、新建页面文件。2、运行 generted 命令即可
