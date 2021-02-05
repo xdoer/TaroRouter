@@ -65,7 +65,7 @@ export function getRouterList(
   }
 
   // index page is first
-  return routerList.sort((a) => (a.name === 'index' ? -1 : 1))
+  return routerList.sort((a) => (a.name === 'Index' ? -1 : 1))
 }
 
 const getPathList = (path: string, exts: string[]) => exts.map((v) => path + `.${v}`)
