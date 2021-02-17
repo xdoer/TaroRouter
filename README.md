@@ -1,6 +1,10 @@
 # generated-plugin-taro-router-service
 
-## 缘由
+让你的 Taro 路由跳转拥有类似 umi 框架约定式路由的体验。
+
+## 效果图
+
+## 简介
 
 Taro 中内置了路由功能，这极大的方便了开发者。我们开发一个小程序页面时，流程是这样的。
 
@@ -21,42 +25,40 @@ navigateTo({ url: `${URLs.Test}?id=1` })
 
 但这样的话，虽然方便了调用，但又需要多维护一份路由映射表文件。
 
-因而这个小工具诞生了。
+因而这个脚本诞生了。
 
 ## 作用
 
 > - 自动配置 `app.config.ts` 文件进行页面注册
 > - 自动配置 `project.config.json` 文件，添加开发者工具页面编译快捷入口
 > - 自动生成 `routerService` 文件，使得路由调用跳转更便捷。
+> - 配合[webpack-plugin-chokidar](https://github.com/LuckyHH/webpack-plugin-chokidar)插件，新建页面文件后，将自动运行脚本，生成各项配置。
 
 ## 环境
 
 `taro typescript`
 
+支持 react, vue
+
 ## 效果
 
 ![效果图](./example.gif)
-
-## 使用
-
-1、新建页面文件。2、运行 generted 命令即可
-
-调用
-
-```tsx
-<View onClick={() => routerService.toTest({ id: 1 })}>跳转</View>
-```
-
-注意:
-
-> - 配合[webpack-plugin-chokidar](https://github.com/LuckyHH/webpack-plugin-chokidar)插件，新建页面后即可实时生成各项配置文件
-> - 嫌配置麻烦的，可直接拷贝 example 代码进行使用
 
 ## 安装
 
 ```bash
 npm i generated-plugin-taro-router-service -D
 ```
+
+## 使用
+
+经过配置后，使用非常简单，只需要新建页面文件，即可直接进行调用。
+
+```tsx
+<View onClick={() => routerService.toTest({ id: 1 })}>跳转</View>
+```
+
+注意: 嫌配置麻烦的，可直接拷贝 example 代码进行使用
 
 ## 配置
 
