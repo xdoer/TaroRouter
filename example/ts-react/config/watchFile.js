@@ -1,14 +1,17 @@
-const path = require('path');
-const shell = require('shelljs');
+const path = require('path')
+const shell = require('shelljs')
+const debounce = require('lodash.debounce')
 
-const basePath = path.resolve(__dirname, '../src');
+const basePath = path.resolve(__dirname, '../src')
 
 function execGenerated(log) {
-  console.log(log);
-  shell.exec('npm run gen');
+  console.log(log)
+  shell.exec('npm run gen')
 }
 
-const opt = { persistent: true, ignoreInitial: true };
+const debounceExecGenerated = debounce(execGenerated, 1000)
+
+const opt = { persistent: true, ignoreInitial: true }
 
 module.exports = {
   chokidarConfigList: [
@@ -19,7 +22,7 @@ module.exports = {
       actions: {
         on: {
           add: (_, path) => {
-            execGenerated(`页面 ${path} 被添加`);
+            debounceExecGenerated(`页面 ${path} 被添加`)
           },
           // unlink: (_, path) => {
           //   execGenerated(`页面 ${path} 被移除`)
@@ -34,10 +37,10 @@ module.exports = {
       actions: {
         on: {
           unlink: (_, path) => {
-            execGenerated(`页面 ${path} 被移除`);
+            debounceExecGenerated(`页面 ${path} 被移除`)
           },
         },
       },
     },
   ],
-};
+}

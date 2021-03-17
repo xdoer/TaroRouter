@@ -1,5 +1,6 @@
 const path = require('path')
 const shell = require('shelljs')
+const debounce = require('lodash.debounce')
 
 const basePath = path.resolve(__dirname, '../src')
 
@@ -8,18 +9,20 @@ function execGenerated(log) {
   shell.exec('npm run gen')
 }
 
+const debounceExecGenerated = debounce(execGenerated, 1000)
+
 const opt = { persistent: true, ignoreInitial: true }
 
 module.exports = {
   chokidarConfigList: [
     {
       // 监听页面文件创建
-      file: basePath + '/**/pages/**/index.vue',
+      file: basePath + '/**/pages/**/index.tsx',
       opt,
       actions: {
         on: {
           add: (_, path) => {
-            execGenerated(`页面 ${path} 被添加`)
+            debounceExecGenerated(`页面 ${path} 被添加`)
           },
           // unlink: (_, path) => {
           //   execGenerated(`页面 ${path} 被移除`)
@@ -34,7 +37,7 @@ module.exports = {
       actions: {
         on: {
           unlink: (_, path) => {
-            execGenerated(`页面 ${path} 被移除`)
+            debounceExecGenerated(`页面 ${path} 被移除`)
           },
         },
       },
