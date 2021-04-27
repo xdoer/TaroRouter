@@ -20,6 +20,7 @@ export function generateRouterService(
     navigateSpecifier,
     navigateFnName,
     outputFileName,
+    formatter: customFormatter = formatter
   } = generateRouterServiceOpt
   const outPath = join(generatedDir, `${outputFileName}.ts`)
   const sourceFile = project.createSourceFile(outPath, undefined, {
@@ -36,9 +37,9 @@ export function generateRouterService(
   for (const routerMeta of routerList) {
     const { name, path: initializer } = routerMeta
 
-    properties.push({ name: upFirst(formatter(name)), initializer: `"${initializer}"` })
+    properties.push({ name: upFirst(customFormatter(name)), initializer: `"${initializer}"` })
     methods.push({
-      name: `to${upFirst(formatter(name))}<T>`,
+      name: `to${upFirst(customFormatter(name))}<T>`,
       parameters: [
         { name: 'data?', type: 'T' },
         { name: 'opt?', type: 'any' },

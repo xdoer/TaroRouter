@@ -6,6 +6,7 @@ export interface Config {
   projectConfigPath: string
   outputFileName?: string
   exts?: string[]
+  formatter?(name: string): string
 }
 
 export interface RouterMetaOpt {
@@ -24,7 +25,7 @@ export interface GenerateRouterServiceOpt {
   navigateSpecifier: string
   navigateFnName: string
   outputFileName?: string
-  formatter?(name: string): any
+  formatter?(name: string): string
 }
 
 export interface ModifyAppConfigOpt {
