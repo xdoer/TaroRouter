@@ -98,7 +98,8 @@ export const taroRouter: Config = {
   appConfigPath: basePath + '/src/app.config.ts',
 
   // project.config.json 路径
-  projectConfigPath: basePath + '/project.config.json',
+  // 或者 project.private.config.json
+  projectConfigPath: basePath + '/project.private.config.json',
 
   // 输出文件名
   outputFileName: 'routerService',
