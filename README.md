@@ -60,6 +60,8 @@ npm i generated-plugin-taro-router-service -D
 
 ## 配置
 
+**_注: 会将 [package-(module)/]pages/(page-name).[tsx|vue]_** 自动识别为页面
+
 ### 注册插件
 
 1、在根目录新建 generated 配置文件 .generatedrc.ts
