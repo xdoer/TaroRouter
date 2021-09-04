@@ -34,3 +34,5 @@ export interface ModifyAppConfigOpt {
 export interface modifyProjectConfigOpt {
   projectConfigPath: string
 }
+
+export type RouterArgs = Parameters<(opt: RouterConfig) => Promise<void>>

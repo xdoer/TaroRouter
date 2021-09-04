@@ -55,7 +55,7 @@ export async function modifyAppConfig(
   checkAndAddProperty('pages', objectLiteralExpression, pageInitializer)
   checkAndAddProperty('subPackages', objectLiteralExpression, subPageInitializer)
 
-  saveSourceFile(sourceFile)
+  return saveSourceFile(sourceFile)
 }
 
 function checkAndAddProperty(name: 'pages' | 'subPackages', node: any, initializer: any) {

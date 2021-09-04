@@ -62,5 +62,5 @@ export function generateRouterService(
     isExported: true,
   })
 
-  saveSourceFile(sourceFile)
+  return saveSourceFile(sourceFile)
 }

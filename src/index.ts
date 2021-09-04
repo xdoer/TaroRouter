@@ -18,17 +18,16 @@ export default (options: RouterConfig) => {
 
   const routerList = getRouterList(pageDir, exts)
 
-  generateRouterService(routerList, {
-    navigateSpecifier,
-    navigateFnName,
-    outPutPath,
-    formatter,
-  })
-  modifyAppConfig(routerList, { appConfigPath })
-
-  if (projectConfigPath) {
-    modifyProjectConfig(routerList, { projectConfigPath })
-  }
+  return Promise.all([
+    generateRouterService(routerList, {
+      navigateSpecifier,
+      navigateFnName,
+      outPutPath,
+      formatter,
+    }),
+    modifyAppConfig(routerList, { appConfigPath }),
+    projectConfigPath ? modifyProjectConfig(routerList, { projectConfigPath }) : undefined
+  ])
 }
 
 export * from './types'

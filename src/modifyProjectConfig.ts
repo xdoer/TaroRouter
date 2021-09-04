@@ -37,5 +37,5 @@ export async function modifyProjectConfig(
     }
   }
 
-  await fs.writeFile(projectConfigPath, JSON.stringify(projectConfig, null, 2))
+  return fs.writeFile(projectConfigPath, JSON.stringify(projectConfig, null, 2))
 }

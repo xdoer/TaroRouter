@@ -7,5 +7,5 @@ const formatSettings: FormatCodeSettings = {
 
 export async function saveSourceFile(sourceFile: SourceFile) {
   sourceFile.formatText(formatSettings)
-  await sourceFile.save()
+  return sourceFile.save()
 }

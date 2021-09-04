@@ -108,7 +108,7 @@ taroRouter({
 
 ### 自动执行脚本
 
-你可以使用 [chokidar](https://github.com/xdoer/chokidar) 监听文件夹的创建与删除，来自动执行脚本。
+每次新建页面后，手动执行脚本不够方便。你可以使用 [chokidar](https://github.com/xdoer/chokidar) 监听文件夹的创建与删除，来自动执行脚本。
 
 在项目中编写脚本 `chokidar.mjs`, 进行如下配置, 最后运行 `node chokidar.mjs` 即可
 
@@ -122,11 +122,10 @@ const debounceExec = debounce(() => shelljs.exec('node taro-router.mjs'), 1000)
 chokidar({
   list: [
     {
-      target: process.cwd() + 'src/**/pages/**/index.tsx',
+      target: process.cwd() + '/src/**/pages/**/index.tsx',
       options: { persistent: true, ignoreInitial: true },
       watch: {
         add(watcher, path) {
-          // do something
           debounceExec()
         },
       },
@@ -137,12 +136,14 @@ chokidar({
 
 ### 脚本管理
 
-你可以使用 [ScriptRunner](https://github.com/xdoer/ScriptRunner) 脚本管理器来管理脚本。
+项目中脚本多了之后，不好管理。你可以使用 [ScriptRunner](https://github.com/xdoer/ScriptRunner) 脚本管理器来管理，解析和运行脚本。
 
 这样，你不需要再在项目中写上面提到的两个脚本。直接编写 `scr.config.ts` 配置文件, 进行如下配置
 
 ```ts
 import { Config } from '@xdoer/script-runner'
+import { RouterArgs } from '@xdoer/taro-router'
+import { ChokidarArgs } from '@xdoer/chokidar'
 import * as shelljs from 'shelljs'
 import * as debounce from 'lodash.debounce'
 
@@ -154,7 +155,7 @@ export default <Config>{
   scripts: [
     {
       module: '@xdoer/taro-router',
-      args: [
+      args: <RouterArgs>[
         {
           // 源码目录
           pageDir: basePath + '/src',
@@ -186,15 +187,14 @@ export default <Config>{
     },
     {
       module: '@xdoer/chokidar',
-      args: [
+      args: <ChokidarArgs>[
         {
           list: [
             {
-              target: basePath + 'src/**/pages/**/index.tsx',
+              target: basePath + '/src/**/pages/**/index.tsx',
               options: { persistent: true, ignoreInitial: true },
               watch: {
                 add(watcher, path) {
-                  // do something
                   debounceExec()
                 },
               },
