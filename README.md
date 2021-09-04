@@ -85,6 +85,7 @@ taroRouter({
   appConfigPath: basePath + '/src/app.config.ts',
 
   // project.config.json 或者 project.private.config.json 路径
+  // 可选参数，不传代表不修改
   projectConfigPath: basePath + '/project.private.config.json',
 
   // 输出文件名
@@ -99,10 +100,11 @@ taroRouter({
   navigateFnName: 'customNavigateTo', // 导入方法名
   navigateSpecifier: '@/business/app', // 方法导入标识符
 
-  // 格式化路径
+  // 可选参数，格式化名称
   formatter: (name) => name.replace(/-([a-zA-Z])/g, (_, g) => g.toUpperCase()),
 
-  ext: ['tsx', 'vue'], // 文件扩展(默认tsx)
+  // 可选参数，文件扩展名(默认tsx)
+  exts: ['tsx', 'vue'],
 })
 ```
 
@@ -181,7 +183,7 @@ export default <Config>{
           // 格式化路径
           formatter: (name) => name.replace(/-([a-zA-Z])/g, (_, g) => g.toUpperCase())
 
-          ext: ['tsx', 'vue'], // 文件扩展(默认tsx)
+          exts: ['tsx', 'vue'], // 文件扩展(默认tsx)
         }
       ]
     },
