@@ -24,6 +24,9 @@
       "pre-commit": "tsdx lint"
     }
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "homepage": "https://github.com/xdoer/taro-router",
   "bugs": {
     "url": "https://github.com/xdoer/taro-router/issues",

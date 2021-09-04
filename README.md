@@ -1,6 +1,6 @@
 # TaroRouter
 
-更便捷的 Taro 路由跳转
+便捷的 Taro 路由跳转
 
 ## 简介
 
@@ -25,6 +25,10 @@ navigateTo({ url: `${URLs.Test}?id=1` })
 
 因而这个脚本诞生了。
 
+---
+
+之前的版本请查阅: [generated-plugin-taro-router-service](https://github.com/forsigner/generated/tree/master/packages/generated-taro-router)
+
 ## 作用
 
 > - 自动配置 `app.config.ts` 文件进行页面注册
@@ -32,7 +36,7 @@ navigateTo({ url: `${URLs.Test}?id=1` })
 > - 生成 `routerService` 文件，使得路由调用跳转更便捷。
 > - 配合[chokidar](https://github.com/xdoer/chokidar)，新建页面文件后，将自动运行脚本，生成各项配置。
 
-**约束: [package-(module)/]pages/(page-name).[tsx|vue]\_** 为页面
+**默认约束: [package-(module)/]pages/(page-name)/index.[tsx|vue]** 为页面
 
 ## 环境
 
