@@ -1,5 +1,5 @@
 {
-  "version": "1.0.1",
+  "version": "1.0.0",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -24,9 +24,9 @@
       "pre-commit": "tsdx lint"
     }
   },
-  "homepage": "https://github.com/LuckyHH/generated-plugin-taro-router-service",
+  "homepage": "https://github.com/xdoer/taro-router",
   "bugs": {
-    "url": "https://github.com/LuckyHH/generated-plugin-taro-router-service/issues",
+    "url": "https://github.com/xdoer/taro-router/issues",
     "email": "gotoanything@foxmail.com"
   },
   "keywords": [
@@ -41,26 +41,22 @@
     "arrowParens": "always",
     "trailingComma": "es5"
   },
-  "name": "generated-plugin-taro-router-service",
+  "name": "@xdoer/taro-router",
   "author": "Thomas Trainset",
-  "module": "dist/generated-plugin-taro-router-service.esm.js",
+  "module": "dist/taro-router.esm.js",
   "size-limit": [
     {
-      "path": "dist/generated-plugin-taro-router-service.cjs.production.min.js",
+      "path": "dist/taro-router.cjs.production.min.js",
       "limit": "10 KB"
     },
     {
-      "path": "dist/generated-plugin-taro-router-service.esm.js",
+      "path": "dist/taro-router.esm.js",
       "limit": "10 KB"
     }
   ],
-  "peerDependencies": {
-    "generated": "^1.4.0"
-  },
   "dependencies": {
-    "generated": "^1.4.0",
     "lodash.last": "^3.0.0",
-    "ts-morph": "^9.1.0"
+    "ts-morph": "^12.0.0"
   },
   "devDependencies": {
     "@size-limit/preset-small-lib": "^4.9.1",

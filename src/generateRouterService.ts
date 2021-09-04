@@ -5,7 +5,6 @@ import {
   PropertyDeclarationStructure,
   OptionalKind,
 } from 'ts-morph'
-import { join } from 'path'
 import { saveSourceFile } from './saveSourceFile'
 import { RouterMeta, GenerateRouterServiceOpt } from './types'
 import { formatter, upFirst } from './utils'
@@ -16,14 +15,12 @@ export function generateRouterService(
 ) {
   const project = new Project()
   const {
-    generatedDir,
     navigateSpecifier,
     navigateFnName,
-    outputFileName,
+    outPutPath,
     formatter: customFormatter = formatter
   } = generateRouterServiceOpt
-  const outPath = join(generatedDir, `${outputFileName}.ts`)
-  const sourceFile = project.createSourceFile(outPath, undefined, {
+  const sourceFile = project.createSourceFile(outPutPath, undefined, {
     overwrite: true,
   })
   const properties: OptionalKind<PropertyDeclarationStructure>[] = []

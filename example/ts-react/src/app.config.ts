@@ -8,7 +8,7 @@ export default {
   },
   subPackages: [{
     "root": "package-test",
-    "name": "test",
+    "name": "Test",
     "pages": [
       "pages/test/index"
     ]

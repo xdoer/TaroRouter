@@ -1,14 +1,11 @@
-import { SourceFile, FormatCodeSettings } from 'ts-morph'
-import { SemicolonPreference } from 'typescript'
+import { SourceFile, FormatCodeSettings, ts } from 'ts-morph'
 
 const formatSettings: FormatCodeSettings = {
   indentSize: 2,
-  semicolons: SemicolonPreference.Remove,
+  semicolons: ts.SemicolonPreference.Remove,
 }
 
 export async function saveSourceFile(sourceFile: SourceFile) {
-  // TODO: find a fast way of removing not needed imports
-  // sourceFile.organizeImports(formatSettings);
   sourceFile.formatText(formatSettings)
   await sourceFile.save()
 }

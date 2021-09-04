@@ -1,6 +1,6 @@
-# generated-plugin-taro-router-service
+# TaroRouter
 
-让你的 Taro 路由跳转拥有类似 umi 框架约定式路由的体验。
+更便捷的 Taro 路由跳转
 
 ## 简介
 
@@ -28,9 +28,9 @@ navigateTo({ url: `${URLs.Test}?id=1` })
 ## 作用
 
 > - 自动配置 `app.config.ts` 文件进行页面注册
-> - 自动配置 `project.config.json` 文件，添加开发者工具页面编译快捷入口
-> - 自动生成 `routerService` 文件，使得路由调用跳转更便捷。
-> - 配合[webpack-plugin-chokidar](https://github.com/LuckyHH/webpack-plugin-chokidar)插件，新建页面文件后，将自动运行脚本，生成各项配置。
+> - 自动配置 `project.config.json` 文件，添加开发者工具页面编译快捷入口 (可选)
+> - 生成 `routerService` 文件，使得路由调用跳转更便捷。
+> - 配合[chokidar](https://github.com/xdoer/chokidar)，新建页面文件后，将自动运行脚本，生成各项配置。
 
 ## 环境
 
@@ -40,71 +40,50 @@ navigateTo({ url: `${URLs.Test}?id=1` })
 
 ## 效果
 
+### 自动生成配置
+
+下图演示了监听页面文件的创建，脚本自动生成各项配置的过程
+
 ![效果图](./example.gif)
 
-## 安装
+### 调用
 
-```bash
-npm i generated-plugin-taro-router-service -D
-```
-
-## 使用
-
-经过配置后，使用非常简单，只需要新建页面文件，即可直接进行调用。
+脚本跑完后，使用非常简单，只需要引入自动生成的 `routerService` 文件，即可直接进行调用。
 
 ```tsx
 <View onClick={() => routerService.toTest({ id: 1 })}>跳转</View>
 ```
 
-注意: 嫌配置麻烦的，可直接拷贝 example 代码进行使用
+## 安装
+
+```bash
+npm i @xdoer/taro-router
+```
 
 ## 配置
 
 **_注: 会将 [package-(module)/]pages/(page-name).[tsx|vue]_** 自动识别为页面
 
-### 注册插件
+### 配置脚本
 
-1、在根目录新建 generated 配置文件 .generatedrc.ts
+在你的项目中编写脚本 `taro-router.mjs`, 进行如下配置, 最后运行 `node taro-router.mjs` 即可
 
-2、注册插件
+```js
+import taroRouter from '@xdoer/taro-router'
+import { resolve } from 'path'
 
-```ts
-import { GeneratedrcConfig } from 'generated'
-
-const generatedrc: GeneratedrcConfig = {
-  configDir: './gconfig', // generated 插件配置目录
-  plugins: [
-    'generated-plugin-taro-router-service', // 注册插件
-  ],
-}
-
-export default generatedrc
-```
-
-### 配置插件
-
-1、在根目录新建 `gconfig` 文件夹，文件夹下新建 `router.ts` 配置文件.
-
-2、写入配置
-
-```ts
-import { Config } from 'generated-plugin-taro-router-service'
-
-const basePath = process.cwd()
-
-export const taroRouter: Config = {
-  // 源码目录
+taroRouter({
+    // 源码目录
   pageDir: basePath + '/src',
 
   // app.config 路径
   appConfigPath: basePath + '/src/app.config.ts',
 
-  // project.config.json 路径
-  // 或者 project.private.config.json
+  // project.config.json 或者 project.private.config.json 路径
   projectConfigPath: basePath + '/project.private.config.json',
 
   // 输出文件名
-  outputFileName: 'routerService',
+  outPutPath: resolve(process.cwd() ,'routerService.ts'),
 
   /**
    * 导入组件
@@ -115,29 +94,124 @@ export const taroRouter: Config = {
   navigateFnName: 'customNavigateTo', // 导入方法名
   navigateSpecifier: '@/business/app', // 方法导入标识符
 
+  // 格式化路径
+  formatter: (name) => name.replace(/-([a-zA-Z])/g, (_, g) => g.toUpperCase())
+
   ext: ['tsx', 'vue'], // 文件扩展(默认tsx)
+})
+```
+
+### 自动执行脚本
+
+你可以使用 [chokidar](https://github.com/xdoer/chokidar) 监听文件夹的创建与删除，来自动执行脚本。
+
+在项目中编写脚本 `chokidar.mjs`, 进行如下配置, 最后运行 `node chokidar.mjs` 即可
+
+```ts
+import chokidar from '@xdoer/chokidar'
+import shelljs from 'shelljs'
+import { resolve } from 'path'
+import { debounce } from 'lodash'
+
+const debounceExec = () => debounce(() => shelljs.exec('node taro-router.mjs'), 1000)
+
+chokidar({
+  options: { persistent: true, ignoreInitial: true },
+  list: [
+    {
+      target: resolve(process.cwd()), 'src/**/pages/**/index.tsx',
+      options: { ignoreInitial: false },
+      watch: {
+        add(watcher, path) {
+          // do something
+          debounceExec()
+        },
+      },
+    },
+  ],
+})
+```
+
+### 脚本管理
+
+你可以使用 [ScriptRunner](https://github.com/xdoer/ScriptRunner) 脚本管理器来管理脚本。
+
+这样，你不需要再在项目中写上面提到的两个脚本。直接编写 `scr.config.ts` 配置文件, 进行如下配置
+
+```ts
+import { Config } from '@xdoer/script-runner'
+import shelljs from 'shelljs'
+import { resolve } from 'path'
+import { debounce } from 'lodash'
+
+const debounceExec = () => debounce(() => shelljs.exec('scr -r @xdoer/taro-router'), 1000)
+
+export default <Config>{
+  scripts: [
+    {
+      module: '@xdoer/taro-router',
+      args: [
+        {
+          // 源码目录
+          pageDir: basePath + '/src',
+
+          // app.config 路径
+          appConfigPath: basePath + '/src/app.config.ts',
+
+          // project.config.json 或者 project.private.config.json 路径
+          projectConfigPath: basePath + '/project.private.config.json',
+
+          // 输出文件名
+          outPutPath: resolve(process.cwd() ,'routerService.ts'),
+
+          /**
+           * 导入组件
+           *
+           * 输出的文件将导入方法
+           * import { customNavigateTo } from '@/business/app'
+           */
+          navigateFnName: 'customNavigateTo', // 导入方法名
+          navigateSpecifier: '@/business/app', // 方法导入标识符
+
+          // 格式化路径
+          formatter: (name) => name.replace(/-([a-zA-Z])/g, (_, g) => g.toUpperCase())
+
+          ext: ['tsx', 'vue'], // 文件扩展(默认tsx)
+        }
+      ]
+    },
+    {
+      module: '@xdoer/chokidar',
+      args: [
+        {
+          options: { persistent: true, ignoreInitial: true },
+          list: [
+            {
+              target: resolve(process.cwd()), 'src/**/pages/**/index.tsx',
+              options: { ignoreInitial: false },
+              watch: {
+                add(watcher, path) {
+                  // do something
+                  debounceExec()
+                },
+              },
+            },
+          ],
+        }
+      ]
+    }
+  ]
 }
 ```
 
-注意:
-
-> - 这里 `taroRouter` 名称不能变
-> - 配置的函数（navigateFnName）需要满足传参为 customNavigateTo(pagePath: string, data: Object, opt: Object)
-
-### 配置命令
-
-1、在 `package.json` 中写入生成命令
+整合命令
 
 ```json
-  "scripts": {
-    "gen": "generated",
+{
+  "script": {
+    "dev": "scr & taro build --type weapp"
   }
-```
-
-2、运行命令即可生成 `routerService.ts` 文件
-
-```bash
-npm run gen
+}
 ```
 
 ## 路由方法
@@ -155,7 +229,7 @@ export function customNavigateTo(pagePath: string, data?: any, opt?: any) {
 
 ## 监听文件变更自动运行命令
 
-新建文件后，手动运行 `generated` 命令还是不够方便，因而，我设计了一个集成 [chokidar](https://github.com/paulmillr/chokidar) 的 webpack 插件[webpack-plugin-chokidar](https://github.com/LuckyHH/webpack-plugin-chokidar)，通过该插件，可以很容易的对文件更改进行监听，然后利用 shelljs 执行脚本即可。
+新建文件后，手动运行 `generated` 命令还是不够方便，因而，我设计了一个集成 [chokidar](https://github.com/paulmillr/chokidar) 的 webpack 插件[webpack-plugin-chokidar](https://github.com/xdoer/webpack-plugin-chokidar)，通过该插件，可以很容易的对文件更改进行监听，然后利用 shelljs 执行脚本即可。
 
 ## 案例
 

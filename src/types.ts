@@ -1,10 +1,10 @@
-export interface Config {
+export interface RouterConfig {
   pageDir: string
   navigateFnName: string
   navigateSpecifier: string
   appConfigPath: string
-  projectConfigPath: string
-  outputFileName?: string
+  outPutPath: string
+  projectConfigPath?: string
   exts?: string[]
   formatter?(name: string): string
 }
@@ -21,10 +21,9 @@ export interface RouterMeta extends RouterMetaOpt {
 }
 
 export interface GenerateRouterServiceOpt {
-  generatedDir: string
   navigateSpecifier: string
   navigateFnName: string
-  outputFileName?: string
+  outPutPath: string
   formatter?(name: string): string
 }
 
