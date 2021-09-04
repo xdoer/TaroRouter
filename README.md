@@ -32,6 +32,8 @@ navigateTo({ url: `${URLs.Test}?id=1` })
 > - 生成 `routerService` 文件，使得路由调用跳转更便捷。
 > - 配合[chokidar](https://github.com/xdoer/chokidar)，新建页面文件后，将自动运行脚本，生成各项配置。
 
+**约束: [package-(module)/]pages/(page-name).[tsx|vue]\_** 为页面
+
 ## 环境
 
 `taro typescript`
@@ -62,18 +64,17 @@ npm i @xdoer/taro-router
 
 ## 配置
 
-**_注: 会将 [package-(module)/]pages/(page-name).[tsx|vue]_** 自动识别为页面
-
 ### 配置脚本
 
 在你的项目中编写脚本 `taro-router.mjs`, 进行如下配置, 最后运行 `node taro-router.mjs` 即可
 
 ```js
 import taroRouter from '@xdoer/taro-router'
-import { resolve } from 'path'
+
+const basePath = process.cwd()
 
 taroRouter({
-    // 源码目录
+  // 源码目录
   pageDir: basePath + '/src',
 
   // app.config 路径
@@ -83,7 +84,7 @@ taroRouter({
   projectConfigPath: basePath + '/project.private.config.json',
 
   // 输出文件名
-  outPutPath: resolve(process.cwd() ,'routerService.ts'),
+  outPutPath: basePath + '/src/routerService.ts',
 
   /**
    * 导入组件
@@ -95,7 +96,7 @@ taroRouter({
   navigateSpecifier: '@/business/app', // 方法导入标识符
 
   // 格式化路径
-  formatter: (name) => name.replace(/-([a-zA-Z])/g, (_, g) => g.toUpperCase())
+  formatter: (name) => name.replace(/-([a-zA-Z])/g, (_, g) => g.toUpperCase()),
 
   ext: ['tsx', 'vue'], // 文件扩展(默认tsx)
 })
@@ -109,18 +110,16 @@ taroRouter({
 
 ```ts
 import chokidar from '@xdoer/chokidar'
-import shelljs from 'shelljs'
-import { resolve } from 'path'
-import { debounce } from 'lodash'
+import * as shelljs from 'shelljs'
+import * as debounce from 'lodash.debounce'
 
-const debounceExec = () => debounce(() => shelljs.exec('node taro-router.mjs'), 1000)
+const debounceExec = debounce(() => shelljs.exec('node taro-router.mjs'), 1000)
 
 chokidar({
-  options: { persistent: true, ignoreInitial: true },
   list: [
     {
-      target: resolve(process.cwd()), 'src/**/pages/**/index.tsx',
-      options: { ignoreInitial: false },
+      target: process.cwd() + 'src/**/pages/**/index.tsx',
+      options: { persistent: true, ignoreInitial: true },
       watch: {
         add(watcher, path) {
           // do something
@@ -140,11 +139,12 @@ chokidar({
 
 ```ts
 import { Config } from '@xdoer/script-runner'
-import shelljs from 'shelljs'
-import { resolve } from 'path'
-import { debounce } from 'lodash'
+import * as shelljs from 'shelljs'
+import * as debounce from 'lodash.debounce'
 
-const debounceExec = () => debounce(() => shelljs.exec('scr -r @xdoer/taro-router'), 1000)
+const debounceExec = debounce(() => shelljs.exec('scr -r @xdoer/taro-router'), 1000)
+
+const basePath = process.cwd()
 
 export default <Config>{
   scripts: [
@@ -162,7 +162,7 @@ export default <Config>{
           projectConfigPath: basePath + '/project.private.config.json',
 
           // 输出文件名
-          outPutPath: resolve(process.cwd() ,'routerService.ts'),
+          outPutPath: basePath + '/src/routerService.ts'),
 
           /**
            * 导入组件
@@ -184,11 +184,10 @@ export default <Config>{
       module: '@xdoer/chokidar',
       args: [
         {
-          options: { persistent: true, ignoreInitial: true },
           list: [
             {
-              target: resolve(process.cwd()), 'src/**/pages/**/index.tsx',
-              options: { ignoreInitial: false },
+              target: basePath + 'src/**/pages/**/index.tsx',
+              options: { persistent: true, ignoreInitial: true },
               watch: {
                 add(watcher, path) {
                   // do something
@@ -227,11 +226,7 @@ export function customNavigateTo(pagePath: string, data?: any, opt?: any) {
 }
 ```
 
-## 监听文件变更自动运行命令
-
-新建文件后，手动运行 `generated` 命令还是不够方便，因而，我设计了一个集成 [chokidar](https://github.com/paulmillr/chokidar) 的 webpack 插件[webpack-plugin-chokidar](https://github.com/xdoer/webpack-plugin-chokidar)，通过该插件，可以很容易的对文件更改进行监听，然后利用 shelljs 执行脚本即可。
-
-## 案例
+## DEMO
 
 > - [React + Typescript](./example/ts-react/config/index.js)
 > - [Vue3 + Typescript](./example/ts-vue/config/index.js)
