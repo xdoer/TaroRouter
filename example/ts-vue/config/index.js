@@ -41,16 +41,6 @@ const config = {
         },
       },
     },
-    webpackChain(chain) {
-      chain.merge({
-        plugin: {
-          install: {
-            plugin: require('webpack-plugin-chokidar'),
-            args: [require('./watchFile')],
-          },
-        },
-      })
-    },
   },
   h5: {
     publicPath: '/',

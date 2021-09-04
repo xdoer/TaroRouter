@@ -1,4 +1,4 @@
-const path = require("path")
+const path = require('path')
 
 const config = {
   projectName: 'example',
@@ -41,16 +41,6 @@ const config = {
         },
       },
     },
-    webpackChain(chain) {
-      chain.merge({
-        plugin: {
-          install: {
-            plugin: require('webpack-plugin-chokidar'),
-            args: [require('./watchFile')],
-          },
-        },
-      })
-    },
   },
   h5: {
     publicPath: '/',
@@ -71,7 +61,7 @@ const config = {
   },
 }
 
-module.exports = function (merge) {
+module.exports = function(merge) {
   if (process.env.NODE_ENV === 'development') {
     return merge({}, config, require('./dev'))
   }
