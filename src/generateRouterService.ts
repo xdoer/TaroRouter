@@ -18,7 +18,7 @@ export function generateRouterService(
     navigateSpecifier,
     navigateFnName,
     outPutPath,
-    formatter: customFormatter = formatter
+    formatter: customFormatter = formatter,
   } = generateRouterServiceOpt
   const sourceFile = project.createSourceFile(outPutPath, undefined, {
     overwrite: true,
