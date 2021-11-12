@@ -26,6 +26,7 @@ const initOpt: RouterMetaOpt = { prefix: 'pages', type: 'main', package: '' }
 export function getRouterList(
   path = '',
   exts = ['tsx'],
+  homePage = 'index',
   routerList: RouterMeta[] = [],
   opt = initOpt
 ) {
@@ -60,12 +61,12 @@ export function getRouterList(
         type: 'sub',
         package: name,
       }
-      routerList = getRouterList(resolve(path, item), exts, routerList, opt)
+      routerList = getRouterList(resolve(path, item), exts, homePage, routerList, opt)
     }
   }
 
-  // index page is first
-  return routerList.sort((a) => (a.name === 'Index' ? -1 : 1))
+  // homePage is first
+  return routerList.sort((a) => (a.name === upFirst(homePage) ? -1 : 1))
 }
 
 const getPathList = (path: string, exts: string[]) => exts.map((v) => path + `.${v}`)

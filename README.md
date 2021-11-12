@@ -81,6 +81,9 @@ taroRouter({
   // 源码目录
   pageDir: basePath + '/src',
 
+  // 首页, 即 app.config.ts 中 pages 数组的第一项。值为页面文件夹名称
+  homePage: 'index',
+
   // app.config 路径
   appConfigPath: basePath + '/src/app.config.ts',
 

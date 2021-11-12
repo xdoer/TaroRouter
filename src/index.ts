@@ -14,9 +14,10 @@ export default (options: RouterConfig) => {
     outPutPath,
     formatter,
     exts,
+    homePage
   } = options
 
-  const routerList = getRouterList(pageDir, exts)
+  const routerList = getRouterList(pageDir, exts, homePage)
 
   return Promise.all([
     generateRouterService(routerList, {

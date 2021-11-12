@@ -1,5 +1,6 @@
 export interface RouterConfig {
   pageDir: string
+  homePage: string
   navigateFnName: string
   navigateSpecifier: string
   appConfigPath: string
