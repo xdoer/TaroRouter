@@ -120,7 +120,7 @@ taroRouter({
 ```ts
 import chokidar from '@xdoer/chokidar'
 import * as shelljs from 'shelljs'
-import * as debounce from 'lodash.debounce'
+const debounce = require('lodash.debounce')
 
 const debounceExec = debounce(() => shelljs.exec('node taro-router.mjs'), 1000)
 
@@ -146,11 +146,11 @@ chokidar({
 这样，你不需要再在项目中写上面提到的两个脚本。直接编写 `scr.config.ts` 配置文件, 进行如下配置
 
 ```ts
-import { Config } from '@xdoer/script-runner'
+import { Config } from '@xdoer/script-runner/lib/types'
 import { RouterArgs } from '@xdoer/taro-router'
 import { ChokidarArgs } from '@xdoer/chokidar'
 import * as shelljs from 'shelljs'
-import * as debounce from 'lodash.debounce'
+const debounce = require('lodash.debounce')
 
 const debounceExec = debounce(() => shelljs.exec('scr -r @xdoer/taro-router'), 1000)
 
@@ -165,6 +165,8 @@ export default <Config>{
           // 源码目录
           pageDir: basePath + '/src',
 
+          homePage: 'index',
+
           // app.config 路径
           appConfigPath: basePath + '/src/app.config.ts',
 
@@ -172,7 +174,7 @@ export default <Config>{
           projectConfigPath: basePath + '/project.private.config.json',
 
           // 输出文件名
-          outPutPath: basePath + '/src/routerService.ts'),
+          outPutPath: basePath + '/src/routerService.ts',
 
           /**
            * 导入组件
@@ -184,11 +186,11 @@ export default <Config>{
           navigateSpecifier: '@/business/app', // 方法导入标识符
 
           // 格式化路径
-          formatter: (name) => name.replace(/-([a-zA-Z])/g, (_, g) => g.toUpperCase())
+          formatter: (name) => name.replace(/-([a-zA-Z])/g, (_, g) => g.toUpperCase()),
 
           exts: ['tsx', 'vue'], // 文件扩展(默认tsx)
-        }
-      ]
+        },
+      ],
     },
     {
       module: '@xdoer/chokidar',
@@ -199,16 +201,14 @@ export default <Config>{
               target: basePath + '/src/**/pages/**/index.tsx',
               options: { persistent: true, ignoreInitial: true },
               watch: {
-                add(watcher, path) {
-                  debounceExec()
-                },
+                add: debounceExec,
               },
             },
           ],
-        }
-      ]
-    }
-  ]
+        },
+      ],
+    },
+  ],
 }
 ```
 
